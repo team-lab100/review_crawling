@@ -1,6 +1,7 @@
 **2024-03-19 업데이트**
 
 사용방법
+최초 git clone 시 yarn 명령어 실행
 
 1. 스마트스토어 상품코드.xlsx 파일에 스마트스토어 상품코드 기재 ex) https://brand.naver.com/onnuristore/products/6626482241 일 경우 **6626482241** 기재 (한줄에 하나씩 여러개 가능)
 
