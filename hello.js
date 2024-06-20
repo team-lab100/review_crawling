@@ -64,7 +64,7 @@ const changeToOriginProductNo = async (productNo) => { //TODO: 2
         })
     let originNo = res.match(/"productNo":"(\d+)"/)
 
-    console.log('originProduct No : '+ originNo[1])
+    console.log('originProduct No : '+ originNo)
 
     return originNo[1]
 }
@@ -92,19 +92,19 @@ const getReviews = async (originProductNo) => {
             })
         })
             .then(response => {
-
                 return response.text()
             })
         if(res === 'OK') {
 
             break
         }
-
+        if(!res) return
         res = JSON.parse(res.replace('\n', ''))
 
         let review = res['contents']
 
         let last = JSON.stringify(res['last'])
+        sleep(3000)
         if (last === 'false') {
             page++
             console.log(page + last)
@@ -118,7 +118,6 @@ const getReviews = async (originProductNo) => {
 
     }
 
-    console.log(reviews)
     return reviews
 }
 
@@ -128,13 +127,12 @@ const reviewCrawl = async () => {
 
     const urlList = await readXlsxFile()
 
-    console.log(urlList)
-
     for(let n in urlList) {
+        sleep(2000)
         let productNo = urlList[n][0]
-        console.log('productNo :' + productNo)
         let originProductNo = await changeToOriginProductNo(productNo)
         let reviewList = await getReviews(originProductNo)
+        if(!reviewList) return
         resultList.concat(reviewList)
         for(let i in reviewList) {
             // resultList.push(reviewList[i])
@@ -162,7 +160,9 @@ const reviewCrawl = async () => {
                 'reviewScore' : reviewList[i]['reviewScore'],
                 'writerId' : reviewList[i]['writerId'],
                 'createDate' : reviewList[i]['createDate'],
-                'reviewUrls' : reviewAttachesConcat
+                'reviewUrls' : reviewAttachesConcat,
+                'onnsProductItemNo' : urlList[n][1],
+                'parseImg' : ''
             })
             reviewAttachesToArray = ''
         }
